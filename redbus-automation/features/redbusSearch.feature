@@ -7,9 +7,9 @@ Feature: Search buses on redBus
     Given user launches the redBus website
 
   @smoke @regression @searchBus
-  Scenario: Search buses from Pune to Mumbai
-    When user enters "Pune" in the From location
-    And user enters "Mumbai" in the To location
+  Scenario: Search buses using the configured route
+    When user enters the configured From location
+    And user enters the configured To location
     And user selects a journey date
     And user clicks on the Search buses button
-    Then user should see the available buses from Pune to Mumbai
+    Then user should see the available buses for the configured route

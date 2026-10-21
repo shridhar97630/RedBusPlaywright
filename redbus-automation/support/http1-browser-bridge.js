@@ -68,6 +68,9 @@ async function requestOverHttp1(request) {
     '--header',
     'Accept-Encoding: identity',
   ];
+  if (request.method() === 'GET') {
+    args.push('--retry', '1', '--retry-delay', '1', '--retry-connrefused');
+  }
 
   const requestHeaders = await request.allHeaders();
   for (const name of [
