@@ -12,12 +12,14 @@ Given('user launches the redBus website', async function () {
   ).toBeVisible();
 });
 
-When('user enters the configured From location', async function () {
-  await this.pages.products.enterOrigin(this.route.from);
+When('user enters {string} in the From location', async function (city) {
+  this.route = { ...this.route, from: city };
+  await this.pages.products.enterOrigin(city);
 });
 
-When('user enters the configured To location', async function () {
-  await this.pages.products.enterDestination(this.route.to);
+When('user enters {string} in the To location', async function (city) {
+  this.route = { ...this.route, to: city };
+  await this.pages.products.enterDestination(city);
 });
 
 When('user selects a journey date', async function () {
@@ -29,11 +31,8 @@ When('user clicks on the Search buses button', async function () {
 });
 
 Then(
-  'user should see the available buses for the configured route',
-  async function () {
-    await this.pages.products.expectAvailableBuses(
-      this.route.from,
-      this.route.to,
-    );
+  'user should see the available buses from {word} to {word}',
+  async function (from, to) {
+    await this.pages.products.expectAvailableBuses(from, to);
   },
 );
