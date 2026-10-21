@@ -2,6 +2,7 @@ const { Given, When, Then } = require('@cucumber/cucumber');
 const { expect } = require('@playwright/test');
 
 Given('user launches the redBus website', async function () {
+  await this.pages.products.open();
   await expect(this.page).toHaveTitle(/redBus/i);
   await expect(
     this.page.getByRole('heading', {

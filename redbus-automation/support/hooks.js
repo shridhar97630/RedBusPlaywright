@@ -32,7 +32,6 @@ Before(async function ({ pickle }) {
   const page = await this.context.newPage();
   this.setPageObjects(page);
   this.video = page.video();
-  await this.pages.products.open();
 });
 
 After(async function ({ result }) {

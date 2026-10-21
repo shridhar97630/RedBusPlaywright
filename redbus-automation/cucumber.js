@@ -7,7 +7,7 @@ module.exports = {
       'step-definitions/**/*.js',
     ],
     format: [
-      'progress',
+      'summary',
       'json:reports/cucumber-report.json',
       'merv-client-cucumber',
     ],
