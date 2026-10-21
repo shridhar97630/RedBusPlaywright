@@ -1,0 +1,23 @@
+{
+  "name": "redbus-automation",
+  "version": "1.0.0",
+  "description": "RedBus browser automation using Playwright, Cucumber BDD and MERV",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "test": "cucumber-js",
+    "test:smoke": "cucumber-js --tags \"@smoke\"",
+    "test:regression": "cucumber-js --tags \"@regression\"",
+    "test:search": "cucumber-js --tags \"@searchBus\"",
+    "report": "merv show-report ./reports/merv"
+  },
+  "engines": {
+    "node": ">=24"
+  },
+  "devDependencies": {
+    "@cucumber/cucumber": "^13.3.0",
+    "@playwright/test": "^1.64.1",
+    "merv-client-cucumber": "^4.0.25",
+    "playwright": "^1.64.1"
+  }
+}
