@@ -17,15 +17,32 @@ class ProductsPage {
   async open() {
     await this.page.goto(config.baseUrl, {
       waitUntil: 'domcontentloaded',
-      timeout: 60_000,
+      timeout: config.navigationTimeoutMs,
     });
   }
 
   async selectCity(input, city) {
+    const suggestionResponse = this.page.waitForResponse(
+      (response) => {
+        const url = new URL(response.url());
+        return (
+          url.pathname === '/rpw/api/citySuggestion' &&
+          url.searchParams.get('search') === city
+        );
+      },
+      { timeout: config.navigationTimeoutMs },
+    );
     await input.fill(city);
-    const citySuggestion = this.page.getByText(city, { exact: true }).first();
-    await expect(citySuggestion).toBeVisible({ timeout: 15_000 });
+    const response = await suggestionResponse;
+    expect(response.ok(), `Autocomplete request for ${city} should succeed`).toBe(
+      true,
+    );
+    const citySuggestion = this.page
+      .locator(`[role="heading"][aria-label="${city}"]`)
+      .first();
+    await expect(citySuggestion).toBeVisible({ timeout: 30_000 });
     await citySuggestion.click();
+    await expect(input).toHaveValue(city);
   }
 
   async enterOrigin(city) {
@@ -53,8 +70,30 @@ class ProductsPage {
     await this.page.getByRole('button', { name: /tomorrow/i }).first().click();
   }
 
-  async searchBuses() {
-    await this.searchBusesButton.click();
+  async searchBuses(from, to) {
+    const routePath = new RegExp(
+      `/bus-tickets/${from.toLowerCase().replace(/\s+/g, '-')}-to-${to
+        .toLowerCase()
+        .replace(/\s+/g, '-')}`,
+      'i',
+    );
+    const navigation = this.page.waitForURL(
+      (url) => routePath.test(url.pathname),
+      { timeout: config.navigationTimeoutMs },
+    );
+    const [clickResult, navigationResult] = await Promise.allSettled([
+      this.searchBusesButton.click({
+        timeout: config.navigationTimeoutMs,
+      }),
+      navigation,
+    ]);
+
+    if (navigationResult.status === 'rejected') {
+      throw clickResult.status === 'rejected'
+        ? clickResult.reason
+        : navigationResult.reason;
+    }
+    // redBus replaces the search button during navigation before Playwright settles the click.
   }
 
   async expectAvailableBuses(from, to) {
@@ -62,8 +101,14 @@ class ProductsPage {
       new RegExp(`${from.toLowerCase()}.*${to.toLowerCase()}`, 'i'),
       { timeout: 45_000 },
     );
+    const availableBuses = this.page
+      .getByText(/^\d+\s+buses found$/i)
+      .last();
+    await expect(availableBuses).toBeVisible({ timeout: 45_000 });
+    const busCount = Number.parseInt(await availableBuses.innerText(), 10);
+    expect(busCount).toBeGreaterThan(0);
     await expect(
-      this.page.getByText(new RegExp(`${from}.*${to}`, 'i')).first(),
+      this.page.locator('[class*="busTitleWrapper"]').first(),
     ).toBeVisible({ timeout: 45_000 });
   }
 }

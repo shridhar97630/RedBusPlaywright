@@ -31,6 +31,8 @@ jobs:
     env:
       CI: true
       BASE_URL: ${{ vars.BASE_URL || 'https://www.redbus.in' }}
+      PLAYWRIGHT_PROXY: ${{ secrets.PLAYWRIGHT_PROXY }}
+      RED_BUS_CURL_BRIDGE: ${{ vars.RED_BUS_CURL_BRIDGE || 'true' }}
 
     steps:
       - name: Check out repository
@@ -62,7 +64,8 @@ jobs:
         with:
           name: redbus-automation-reports
           path: |
-            redbus-automation/reports/
+            redbus-automation/merv-results/
+            redbus-automation/merv-report/
             redbus-automation/screenshots/
             redbus-automation/traces/
             redbus-automation/videos/

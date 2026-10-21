@@ -8,6 +8,7 @@ const { chromium } = require('playwright');
 const fs = require('node:fs/promises');
 const path = require('node:path');
 const config = require('../config/environment');
+const installHttp1BrowserBridge = require('./http1-browser-bridge');
 
 setDefaultTimeout(60_000);
 
@@ -17,12 +18,18 @@ function safeFileName(name) {
 
 Before(async function ({ pickle }) {
   this.scenarioName = pickle.name;
-  this.browser = await chromium.launch({ headless: config.headless });
+  this.browser = await chromium.launch({
+    headless: config.headless,
+    proxy: config.browserProxy,
+  });
   this.context = await this.browser.newContext({
     acceptDownloads: false,
     recordVideo: { dir: config.artifacts.videos },
     viewport: { width: 1440, height: 1000 },
   });
+  if (config.http1Bridge) {
+    await installHttp1BrowserBridge(this.context, config.baseUrl);
+  }
   await this.context.tracing.start({
     screenshots: true,
     snapshots: true,

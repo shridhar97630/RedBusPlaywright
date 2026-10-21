@@ -3,6 +3,7 @@ const LoginPage = require('../pages/LoginPage');
 const ProductsPage = require('../pages/ProductsPage');
 const CartPage = require('../pages/CartPage');
 const CheckoutPage = require('../pages/CheckoutPage');
+const config = require('../config/environment');
 
 class RedBusWorld extends World {
   constructor(options) {
@@ -13,6 +14,7 @@ class RedBusWorld extends World {
     this.pages = undefined;
     this.video = undefined;
     this.scenarioName = '';
+    this.route = config.route;
   }
 
   setPageObjects(page) {

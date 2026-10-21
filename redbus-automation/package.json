@@ -5,11 +5,19 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "test": "cucumber-js",
+    "pretest": "node scripts/prepare-reports.js",
+    "test": "npm run test:bdd",
+    "pretest:bdd": "node scripts/prepare-reports.js",
+    "test:bdd": "cucumber-js",
+    "pretest:smoke": "node scripts/prepare-reports.js",
     "test:smoke": "cucumber-js --tags \"@smoke\"",
+    "pretest:regression": "node scripts/prepare-reports.js",
     "test:regression": "cucumber-js --tags \"@regression\"",
+    "pretest:search": "node scripts/prepare-reports.js",
     "test:search": "cucumber-js --tags \"@searchBus\"",
-    "report": "merv show-report ./reports/merv"
+    "test:report": "npm run merv:generate",
+    "merv:generate": "npm run test:bdd",
+    "merv:open": "merv show-report ./merv-report --no-open"
   },
   "engines": {
     "node": ">=24"

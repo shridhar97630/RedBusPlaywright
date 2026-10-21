@@ -8,7 +8,8 @@ module.exports = {
     ],
     format: [
       'summary',
-      'json:reports/cucumber-report.json',
+      'html:merv-results/cucumber-report.html',
+      'json:merv-results/cucumber-report.json',
       'merv-client-cucumber',
     ],
     formatOptions: {
