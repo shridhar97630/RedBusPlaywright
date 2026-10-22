@@ -15,6 +15,7 @@
     "test:regression": "cucumber-js --tags \"@regression\"",
     "pretest:search": "node scripts/prepare-reports.js",
     "test:search": "cucumber-js --tags \"@searchBus\"",
+    "test:playwright": "playwright test test/redbusSearch.spec.js",
     "test:report": "npm run merv:generate",
     "merv:generate": "npm run test:bdd",
     "merv:open": "merv show-report ./merv-report --no-open"

@@ -26,6 +26,7 @@ npm test
 | `npm run test:smoke` | Run scenarios tagged `@smoke` |
 | `npm run test:regression` | Run scenarios tagged `@regression` |
 | `npm run test:report` | Run the suite and generate fresh Cucumber and MERV reports |
+| `npm run test:playwright` | Run the standalone Playwright test in `test/` |
 | `npm run merv:generate` | Run the suite to generate a fresh MERV report |
 | `npm run merv:open` | Serve the generated MERV report locally |
 
@@ -81,6 +82,7 @@ passenger data, or pay.
 ```text
 features/             Gherkin features
 step-definitions/     Cucumber step definitions
+test/                 Standalone Playwright specs
 pages/                LoginPage, ProductsPage, CartPage, CheckoutPage
 support/              Cucumber World and browser hooks
 test-data/            Reusable route data

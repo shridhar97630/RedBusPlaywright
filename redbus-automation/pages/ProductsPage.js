@@ -54,20 +54,35 @@ class ProductsPage {
   }
 
   async selectJourneyDate() {
-    const tomorrowButton = this.page.getByRole('button', {
+    const tomorrowShortcut = this.page.getByRole('button', {
       name: /search for tomorrow/i,
     });
 
-    if (await tomorrowButton.isVisible()) {
-      await tomorrowButton.click();
+    if (await tomorrowShortcut.isVisible()) {
+      await tomorrowShortcut.click();
       return;
     }
 
-    await this.journeyDate.click();
-    await expect(
-      this.page.getByRole('button', { name: /tomorrow/i }).first(),
-    ).toBeVisible();
-    await this.page.getByRole('button', { name: /tomorrow/i }).first().click();
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    const tomorrowLabel = new Intl.DateTimeFormat('en-US', {
+      weekday: 'long',
+      month: 'long',
+      day: 'numeric',
+      year: 'numeric',
+    }).format(tomorrow);
+    const tomorrowButton = this.page.getByRole('button', {
+      name: tomorrowLabel,
+      exact: true,
+    });
+
+    if (!(await tomorrowButton.isVisible())) {
+      await this.journeyDate.click();
+    }
+    await expect(tomorrowButton).toBeVisible({
+      timeout: config.navigationTimeoutMs,
+    });
+    await tomorrowButton.click();
   }
 
   async searchBuses(from, to) {
